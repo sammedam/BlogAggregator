@@ -10,5 +10,9 @@ namespace BlogDataModel
         [Key]
         public int CategoryID { get; set; }
         public string CategoryName { get; set; }
+
+        public string Label { set; get; }
+
+        public virtual ICollection<ArticleCategory> ArticleCateories { get; set; }
     }
 }

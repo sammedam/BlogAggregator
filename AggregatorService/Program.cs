@@ -20,9 +20,7 @@ namespace AggregatorService
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
-                    ContextFactory cf = new ContextFactory();
-                    string[] test = new string[2];
-                    cf.CreateDbContext(test);
+                    
 
                 });
         

@@ -18,6 +18,12 @@ namespace BlogDataModel
         public string AuthorCountry { get; set; }
         [Key]
         public int AuthorID { get; set; }
+        [StringLength(30)]
+        public string AuthorEmail { get; set; }
+        [StringLength(150)]
+        public string AuthorURI { get; set; }
+
+        public virtual ICollection <ArticleAuthor> ArticleAuthors { get; set; }
 
     }
 }

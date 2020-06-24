@@ -1,7 +1,9 @@
 ﻿using BlogDataModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 //DB Context class for entity models 
 namespace AggregatorContext
@@ -15,5 +17,20 @@ namespace AggregatorContext
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+            modelbuilder.Entity<Author>();
+            modelbuilder.Entity<Blog>();
+            modelbuilder.Entity<Category>();
+            modelbuilder.Entity<Comments>();
+            modelbuilder.Entity<Post>();
+            modelbuilder.Entity<ArticleCategory>()
+                .HasKey(x => new { x.PostID, x.CategoryID });
+            modelbuilder.Entity<ArticleAuthor>()
+                .HasKey(x => new { x.PostID, x.AuthorID });
+
+        }
+
     }
 }

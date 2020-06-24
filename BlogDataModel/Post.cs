@@ -14,9 +14,15 @@ namespace BlogDataModel
         public string PostTitle { get; set; }
         public DateTime PostDateCreated { get; set; }
         public int PostNumComments { get; set; }
-        public int BlogID { get; set; }
-        public int AuthorID { get; set; }
-        public int CategoryID { get; set; }
+        [StringLength(3000)]
+        public string Content { get; set; }
 
+        [StringLength(1000)]
+        public string Summary { get; set; }
+
+        public DateTime Lastupdated { get; set; }
+        public int BlogID { get; set; }
+        public virtual ICollection<ArticleCategory> ArticleCategories { get; set; }
+        public virtual ICollection<ArticleAuthor> ArticleAuthors { get; set; }
     }
 }
