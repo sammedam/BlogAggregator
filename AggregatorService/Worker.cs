@@ -34,7 +34,7 @@ namespace AggregatorService
         private void Blogreader()
         {
             ContextFactory cfact = new ContextFactory();
-            AggregatorDBContext adbcont = cfact.CreateDbContext(new string[] {"",""});
+            AggregatorDBContext adbcont = cfact.CreateDbContext(new string[] { "", "" });
             ICollection<Author> authors = new List<Author>();
             ICollection<Category> cats = new List<Category>();
 
@@ -45,7 +45,7 @@ namespace AggregatorService
                 string blogURL = b.BlogURL;
                 var reader = XmlReader.Create(blogURL);
                 var feed = SyndicationFeed.Load(reader);
-              
+
                 foreach (SyndicationItem article in feed.Items)
                 {
                     Post post = adbcont.Posts.FirstOrDefault(a => a.PostTitle == article.Title.Text && a.Lastupdated == article.LastUpdatedTime);
@@ -63,7 +63,8 @@ namespace AggregatorService
                         if (article.Title.Text.Length >= 60)
                         {
                             post1.PostTitle = article.Title.Text.Substring(0, 59);
-                        } else
+                        }
+                        else
                         {
                             post1.PostTitle = article.Title.Text;
                         }
@@ -78,48 +79,70 @@ namespace AggregatorService
                         {
                             post1.Summary = article.Summary.Text;
                         }
-                        
+
 
                         foreach (SyndicationPerson author in article.Authors)
                         {
-                            Author author1 = adbcont.Authors.FirstOrDefault(a => a.AuthorName == author.Name && a.AuthorEmail == author.Email);
+                            Author author1 = (Author)adbcont.Authors.FirstOrDefault(a => a.AuthorName == author.Name && a.AuthorEmail == author.Email);
                             ArticleAuthor aaa = new ArticleAuthor();
+
                             if (author1 == null)
                             {
-                                Author poster = new Author();
-                                poster.AuthorEmail = author.Email;
-                                poster.AuthorName = author.Name;
-                                poster.AuthorURI = author.Uri;
-                                adbcont.Authors.Add(poster);
-
+                                author1 = new Author();
+                                author1.AuthorEmail = author.Email;
+                                author1.AuthorName = author.Name;
+                                author1.AuthorURI = author.Uri;
+                                adbcont.Authors.Add(author1);
                             }
 
-                            aaa.Posts = post1;
+                            aaa.Posts = post;
                             aaa.Authors = author1;
-                            post.ArticleAuthors.Add(aaa);
+                            post1.ArticleAuthors.Add(aaa);
 
 
                         }
                         foreach (SyndicationCategory cat in article.Categories)
                         {
-                            Category category1 = adbcont.Categories.FirstOrDefault(a => a.CategoryName == cat.Name && a.Label == cat.Label);
-                            ArticleCategory acc = new ArticleCategory();
-                            Category category = new Category();
-                            if (category1 == null)
+                            if (cat != null && !string.IsNullOrEmpty(cat.Name) && cat.Name != "NULL")
                             {
-                                category.CategoryName = cat.Name;
-                                category.Label = cat.Label;
-                                adbcont.Categories.Add(category);
+                                Category category1 = adbcont.Categories.FirstOrDefault(a => a.CategoryName == cat.Name && a.Label == cat.Label);
+                                ArticleCategory acc = new ArticleCategory();
+
+                                if (category1 == null)
+                                {
+                                    Category category = new Category();
+                                    category.CategoryName = cat.Name;
+                                    category.Label = cat.Label;
+                                    adbcont.Categories.Add(category);
+                                    acc.Categories = category;
+                                    acc.Posts = post1;
+                                    post1.ArticleCategories.Add(acc);
+                                }
+
                             }
-                            acc.Categories = category;
-                            acc.Posts = post1;
-                            post1.ArticleCategories.Add(acc);
                         }
                         adbcont.Posts.Add(post1);
                         adbcont.SaveChanges();
                     }
+
                 }
             }
         }
     }
-}
+    private void Commentreader()
+    {
+        ContextFactory cfact = new ContextFactory();
+        AggregatorDBContext adbcont = cfact.CreateDbContext(new string[] { "", "" });
+        ICollection<Comments> comments = new List<Comments>();
+        ICollection<Commentator> commentator = new List<Commentator>();
+        List<Blog> commentstore = adbcont.Blogs.ToList();
+        foreach (Blog b in commentstore) {
+            string commentURL = b.CommentURL;
+            var reader = XmlReader.Create(commentURL);
+            var feed = SyndicationFeed.Load(reader);
+
+        }
+           
+        }
+    }
+

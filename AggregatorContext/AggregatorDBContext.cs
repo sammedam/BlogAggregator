@@ -29,7 +29,8 @@ namespace AggregatorContext
                 .HasKey(x => new { x.PostID, x.CategoryID });
             modelbuilder.Entity<ArticleAuthor>()
                 .HasKey(x => new { x.PostID, x.AuthorID });
-
+            modelbuilder.Entity<CommentatorComment>()
+                .HasKey(x => new { x.CommentatorID, x.CommentID });
         }
 
     }

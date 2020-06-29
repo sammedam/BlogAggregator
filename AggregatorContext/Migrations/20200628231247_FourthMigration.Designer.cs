@@ -4,14 +4,16 @@ using AggregatorContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AggregatorContext.Migrations
 {
     [DbContext(typeof(AggregatorDBContext))]
-    partial class AggregatorDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200628231247_FourthMigration")]
+    partial class FourthMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,10 +114,6 @@ namespace AggregatorContext.Migrations
 
                     b.Property<string>("BlogURL")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<string>("CommentURL")
                         .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 

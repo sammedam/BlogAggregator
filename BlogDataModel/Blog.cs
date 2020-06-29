@@ -18,6 +18,8 @@ namespace BlogDataModel
         public DateTime BlogDateAdded { get; set; }
         public int BlogPostsNum { get; set; }
         public DateTime BlogDateCreated { get; set; }
+        [StringLength(2000)]
+        public string CommentURL { get; set; }
         public int AuthorID { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
