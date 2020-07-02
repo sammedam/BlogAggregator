@@ -10,6 +10,8 @@ namespace BlogDataModel
         [Key]
         public int CommentatorID { get; set; }
         public string CommentatorName { get; set; }
+
+        public string Commentatoremail { get; set; }
         public virtual ICollection<CommentatorComment> CommentatorComments { get; set; }
 
 

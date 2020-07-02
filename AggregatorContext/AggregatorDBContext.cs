@@ -18,12 +18,15 @@ namespace AggregatorContext
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<Commentator> commentators { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             modelbuilder.Entity<Author>();
             modelbuilder.Entity<Blog>();
             modelbuilder.Entity<Category>();
             modelbuilder.Entity<Comments>();
+            modelbuilder.Entity<Commentator>();
             modelbuilder.Entity<Post>();
             modelbuilder.Entity<ArticleCategory>()
                 .HasKey(x => new { x.PostID, x.CategoryID });

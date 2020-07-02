@@ -24,7 +24,8 @@ namespace AggregatorService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Blogreader();
+            //Blogreader();
+            Commentreader();
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
@@ -57,6 +58,7 @@ namespace AggregatorService
                         List<ArticleCategory> ac = new List<ArticleCategory>();
                         post1.ArticleAuthors = aa;
                         post1.ArticleCategories = ac;
+                        
 
                         post1.Lastupdated = article.LastUpdatedTime.UtcDateTime;
                         post1.PostDateCreated = article.PublishDate.UtcDateTime;
@@ -128,21 +130,62 @@ namespace AggregatorService
                 }
             }
         }
-    }
-    private void Commentreader()
-    {
-        ContextFactory cfact = new ContextFactory();
-        AggregatorDBContext adbcont = cfact.CreateDbContext(new string[] { "", "" });
-        ICollection<Comments> comments = new List<Comments>();
-        ICollection<Commentator> commentator = new List<Commentator>();
-        List<Blog> commentstore = adbcont.Blogs.ToList();
-        foreach (Blog b in commentstore) {
-            string commentURL = b.CommentURL;
-            var reader = XmlReader.Create(commentURL);
-            var feed = SyndicationFeed.Load(reader);
 
-        }
-           
+        private void Commentreader()
+        {
+            ContextFactory cfact = new ContextFactory();
+            AggregatorDBContext adbcont = cfact.CreateDbContext(new string[] { "", "" });
+            ICollection<Comments> comments = new List<Comments>();
+            ICollection<Commentator> commentator = new List<Commentator>();
+            List<Blog> commentstore = adbcont.Blogs.ToList();
+            foreach (Blog b in commentstore)
+            {
+                string commentURL = b.CommentURL;
+                var reader = XmlReader.Create(commentURL);
+                var feed = SyndicationFeed.Load(reader);
+                foreach (SyndicationItem comment in feed.Items)
+                {
+
+                    Comments comment1 = new Comments();
+                    List<CommentatorComment> aa = new List<CommentatorComment>();
+                    comment1.CommentatorsComments = aa;
+
+                    comment1.DateCommentPosted = comment.PublishDate.UtcDateTime;
+                    if (comment.Summary.Text.Length >= 1000)
+                    {
+                        comment1.CommentPosted = comment.Summary.Text.Substring(0, 999);
+                    }
+                    else
+                    {
+                        comment1.CommentPosted = comment.Summary.Text;
+                    }
+                    comment1.BlogID = b.BlogID;
+                    adbcont.Comments.Add(comment1);
+                    foreach (SyndicationPerson commentee in comment.Authors)
+                    {
+                        Commentator commentator1 = adbcont.commentators.FirstOrDefault(a => a.CommentatorName == commentee.Name && a.Commentatoremail == commentee.Email);
+                        CommentatorComment cc = new CommentatorComment();
+                        if (commentator1 == null)
+                        {
+                            commentator1 = new Commentator();
+                            commentator1.Commentatoremail = commentee.Email;
+                            commentator1.CommentatorName = commentee.Name;
+                            adbcont.commentators.Add(commentator1);
+                            cc.comments = comment1;
+                            cc.Commentators = commentator1;
+                            comment1.CommentatorsComments.Add(cc);
+                        }
+                       
+                    }
+
+                    adbcont.Comments.Add(comment1);
+                    adbcont.SaveChanges();
+                }
+            }
         }
     }
+
+    
+}
+     
 

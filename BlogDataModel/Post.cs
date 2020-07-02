@@ -20,6 +20,8 @@ namespace BlogDataModel
         [StringLength(1000)]
         public string Summary { get; set; }
 
+        public string PCID { get; set; } 
+
         public DateTime Lastupdated { get; set; }
         public int BlogID { get; set; }
         public virtual ICollection<ArticleCategory> ArticleCategories { get; set; }
