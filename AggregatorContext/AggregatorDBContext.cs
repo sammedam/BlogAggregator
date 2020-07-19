@@ -19,6 +19,7 @@ namespace AggregatorContext
         public DbSet<Post> Posts { get; set; }
 
         public DbSet<Commentator> commentators { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
@@ -27,6 +28,7 @@ namespace AggregatorContext
             modelbuilder.Entity<Category>();
             modelbuilder.Entity<Comments>();
             modelbuilder.Entity<Commentator>();
+            modelbuilder.Entity<Review>();
             modelbuilder.Entity<Post>();
             modelbuilder.Entity<ArticleCategory>()
                 .HasKey(x => new { x.PostID, x.CategoryID });

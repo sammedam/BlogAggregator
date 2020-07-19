@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 using System.Text;
 
 namespace BlogDataModel
@@ -15,6 +16,8 @@ namespace BlogDataModel
         public DateTime DateCommentPosted { get; set; }
         public int PostID { get; set;  }
         public int BlogID { get; set;  }
+
+        public string Absuri { get; set; }
 
         public string PCID { get; set; }
 

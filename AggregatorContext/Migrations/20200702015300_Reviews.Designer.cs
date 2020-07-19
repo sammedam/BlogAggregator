@@ -4,14 +4,16 @@ using AggregatorContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AggregatorContext.Migrations
 {
     [DbContext(typeof(AggregatorDBContext))]
-    partial class AggregatorDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200702015300_Reviews")]
+    partial class Reviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +187,6 @@ namespace AggregatorContext.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Absuri")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("BlogID")
                         .HasColumnType("int");
 
@@ -244,9 +243,6 @@ namespace AggregatorContext.Migrations
                     b.Property<string>("Summary")
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
-
-                    b.Property<string>("absURI")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PostID");
 

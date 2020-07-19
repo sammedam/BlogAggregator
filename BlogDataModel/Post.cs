@@ -20,6 +20,8 @@ namespace BlogDataModel
         [StringLength(1000)]
         public string Summary { get; set; }
 
+        public string absURI { get; set; }
+
         public string PCID { get; set; } 
 
         public DateTime Lastupdated { get; set; }

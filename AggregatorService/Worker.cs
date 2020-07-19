@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using AggregatorContext;
 using BlogDataModel;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -24,7 +23,7 @@ namespace AggregatorService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            //Blogreader();
+            Blogreader();
             Commentreader();
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -58,10 +57,16 @@ namespace AggregatorService
                         List<ArticleCategory> ac = new List<ArticleCategory>();
                         post1.ArticleAuthors = aa;
                         post1.ArticleCategories = ac;
-                        
+                  
 
                         post1.Lastupdated = article.LastUpdatedTime.UtcDateTime;
                         post1.PostDateCreated = article.PublishDate.UtcDateTime;
+                        ICollection<SyndicationLink> links = new List<SyndicationLink>();
+                        links = article.Links;
+                        foreach(SyndicationLink l in links)
+                        {
+                            post1.absURI = l.GetAbsoluteUri().AbsoluteUri;
+                        }
                         if (article.Title.Text.Length >= 60)
                         {
                             post1.PostTitle = article.Title.Text.Substring(0, 59);
@@ -145,11 +150,17 @@ namespace AggregatorService
                 var feed = SyndicationFeed.Load(reader);
                 foreach (SyndicationItem comment in feed.Items)
                 {
-
                     Comments comment1 = new Comments();
+                    ICollection<SyndicationLink> links = new List<SyndicationLink>();
+                    links = comment.Links;
+                    foreach (SyndicationLink l in links)
+                    {
+                        comment1.Absuri = l.Uri.AbsoluteUri;
+                        break;
+                    }
                     List<CommentatorComment> aa = new List<CommentatorComment>();
                     comment1.CommentatorsComments = aa;
-
+                    comment1.PCID = comment.Id; 
                     comment1.DateCommentPosted = comment.PublishDate.UtcDateTime;
                     if (comment.Summary.Text.Length >= 1000)
                     {
