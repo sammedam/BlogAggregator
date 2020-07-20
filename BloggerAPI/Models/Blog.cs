@@ -8,6 +8,5 @@ namespace BloggerAPI.Models
     public class Blog
     {
         public string BlogName { get; set; }
-        public string AuthorName { get; set; }
     }
 }

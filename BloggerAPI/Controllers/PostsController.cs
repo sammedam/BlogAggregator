@@ -26,7 +26,6 @@ namespace BloggerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Article>>> GetPosts()
         {
-            // return await _context.Posts.ToListAsync();
             var query = (from aa in _context.ArticleAuthors
                          join p in _context.Posts
                          on aa.PostID equals p.PostID

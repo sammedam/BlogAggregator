@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AggregatorContext;
 using BlogDataModel;
+using BloggerAPI.Models;
 
 namespace BloggerAPI.Controllers
 {
@@ -23,14 +24,28 @@ namespace BloggerAPI.Controllers
 
         // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Comments>>> GetComments()
+        public async Task<ActionResult<IEnumerable<BloggerAPI.Models.Comments>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            //return await _context.Comments.ToListAsync();
+            var query = (from cc in _context.CommentatorComments
+                         join c in _context.Comments
+                         on cc.CommentID equals c.CommentID
+                         join commenter in _context.commentators
+                         on cc.CommentatorID equals commenter.CommentatorID
+                         select (new BloggerAPI.Models.Comments
+                         {
+                             CommentPosted = c.CommentPosted,
+                             Commenter = commenter.CommentatorName,
+                             DateCommentPosted = c.DateCommentPosted
+                         }
+
+                         )).ToList();
+            return query;
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Comments>> GetComments(int id)
+        public async Task<ActionResult<BlogDataModel.Comments>> GetComments(int id)
         {
             var comments = await _context.Comments.FindAsync(id);
 
@@ -46,7 +61,7 @@ namespace BloggerAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComments(int id, Comments comments)
+        public async Task<IActionResult> PutComments(int id, BlogDataModel.Comments comments)
         {
             if (id != comments.CommentID)
             {
@@ -78,7 +93,7 @@ namespace BloggerAPI.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Comments>> PostComments(Comments comments)
+        public async Task<ActionResult<BlogDataModel.Comments>> PostComments(BlogDataModel.Comments comments)
         {
             _context.Comments.Add(comments);
             await _context.SaveChangesAsync();
@@ -88,7 +103,7 @@ namespace BloggerAPI.Controllers
 
         // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Comments>> DeleteComments(int id)
+        public async Task<ActionResult<BlogDataModel.Comments>> DeleteComments(int id)
         {
             var comments = await _context.Comments.FindAsync(id);
             if (comments == null)

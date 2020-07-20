@@ -26,6 +26,7 @@ namespace BloggerAPI.Controllers
         public async Task<ActionResult<IEnumerable<Blog>>> GetBlogs()
         {
             return await _context.Blogs.ToListAsync();
+
         }
 
         // GET: api/Blogs/5

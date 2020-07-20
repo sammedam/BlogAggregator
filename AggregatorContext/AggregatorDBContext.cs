@@ -22,6 +22,8 @@ namespace AggregatorContext
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ArticleAuthor> ArticleAuthors { get; set; }
         public DbSet<ArticleCategory> ArticleCategories { get; set; }
+        public DbSet<CommentatorComment> CommentatorComments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             modelbuilder.Entity<Author>();
