@@ -9,7 +9,7 @@ namespace BloggerAPI.Models
     {
         public string ArticleTitle { get; set; }
         public string Summary { get; set; }
-        public int ArticleURL { get; set; }
+        public string ArticleURL { get; set; }
         public DateTime ArticleDateCreated { get; set; }
         public string Author { get; set; }
         public string Category { get; set; }

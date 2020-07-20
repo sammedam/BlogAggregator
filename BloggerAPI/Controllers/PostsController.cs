@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AggregatorContext;
 using BlogDataModel;
+using BloggerAPI.Models;
 
 namespace BloggerAPI.Controllers
 {
@@ -23,13 +24,35 @@ namespace BloggerAPI.Controllers
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public async Task<ActionResult<IEnumerable<Article>>> GetPosts()
         {
-            return await _context.Posts.ToListAsync();
+            // return await _context.Posts.ToListAsync();
+            var query = (from aa in _context.ArticleAuthors
+                         join p in _context.Posts
+                         on aa.PostID equals p.PostID
+                         join a in _context.Authors
+                         on aa.AuthorID equals a.AuthorID
+                         join ac in _context.ArticleCategories
+                         on p.PostID equals ac.PostID
+                         join c in _context.Categories
+                         on ac.CategoryID equals c.CategoryID
+                         select (new Article
+                         {
+
+                             ArticleTitle = p.PostTitle,
+                             Summary = p.Summary,
+                             ArticleDateCreated = p.PostDateCreated,
+                             ArticleURL = p.absURI,
+                             Author = a.AuthorName,
+                             Category = c.CategoryName
+                         })).ToList();
+            return query;
+                                   
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
+
         public async Task<ActionResult<Post>> GetPost(int id)
         {
             var post = await _context.Posts.FindAsync(id);
