@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AggregatorContext;
 using BlogDataModel;
 using BloggerAPI.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace BloggerAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace BloggerAPI.Controllers
 
         // GET: api/Posts
         [HttpGet]
+        [EnableCors("AllowOrigin")]
         public async Task<ActionResult<IEnumerable<Article>>> GetPosts()
         {
             var query = (from aa in _context.ArticleAuthors
