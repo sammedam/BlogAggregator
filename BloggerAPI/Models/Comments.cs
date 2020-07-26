@@ -11,5 +11,7 @@ namespace BloggerAPI.Models
         public string Commenter { get; set; }
         public int PostID { get; set; }
         public DateTime DateCommentPosted { get; set; }
+
+        public string AbsUri { get; set; }
     }
 }

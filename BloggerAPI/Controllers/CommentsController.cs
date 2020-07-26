@@ -26,21 +26,38 @@ namespace BloggerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BloggerAPI.Models.Comments>>> GetComments()
         {
-            //return await _context.Comments.ToListAsync();
-            var query = (from cc in _context.CommentatorComments
-                         join c in _context.Comments
-                         on cc.CommentID equals c.CommentID
+            var query = (from c in _context.Comments
+                         join cc in _context.CommentatorComments
+                         on c.CommentID equals cc.CommentID into comcom
+                         from x in comcom.DefaultIfEmpty()
                          join commenter in _context.commentators
-                         on cc.CommentatorID equals commenter.CommentatorID
+                         on x.CommentatorID equals commenter.CommentatorID into a 
+                         from y in a.DefaultIfEmpty()
                          select (new BloggerAPI.Models.Comments
                          {
                              CommentPosted = c.CommentPosted,
-                             Commenter = commenter.CommentatorName,
-                             DateCommentPosted = c.DateCommentPosted
+                             Commenter = y.CommentatorName,
+                             DateCommentPosted = c.DateCommentPosted,
+                             AbsUri = c.Absuri
                          }
 
                          )).ToList();
             return query;
+            //return await _context.Comments.ToListAsync();
+            /* var query = (from cc in _context.CommentatorComments
+                          join c in _context.Comments
+                          on cc.CommentID equals c.CommentID
+                          join commenter in _context.commentators
+                          on cc.CommentatorID equals commenter.CommentatorID
+                          select (new BloggerAPI.Models.Comments
+                          {
+                              CommentPosted = c.CommentPosted,
+                              Commenter = commenter.CommentatorName,
+                              DateCommentPosted = c.DateCommentPosted
+                          }
+
+                          )).ToList();
+             return query; */
         }
 
         // GET: api/Comments/5

@@ -51,30 +51,6 @@ namespace BloggerAPI.Controllers
                          })).ToList();
             return query;
 
-            /*
-            var query = (from aa in _context.ArticleAuthors
-                         join p in _context.Posts
-                         on aa.PostID equals p.PostID
-                         join a in _context.Authors
-                         on aa.AuthorID equals a.AuthorID
-                         join ac in _context.ArticleCategories
-                         on p.PostID equals ac.PostID
-                         join c in _context.Categories
-                         on ac.CategoryID equals c.CategoryID
-                         select (new Article
-                         {
-
-                             ArticleTitle = p.PostTitle,
-                             Summary = p.Summary,
-                             ArticleDateCreated = p.PostDateCreated,
-                             ArticleURL = p.absURI,
-                             Author = a.AuthorName,
-                             Category = c.CategoryName
-                         })).ToList();
-            return query;
-
-            */
-
         }
 
         // GET: api/Posts/5
